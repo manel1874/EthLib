@@ -521,7 +521,7 @@ No theorem states unforgeability.
 
 ### AES
 
-The AES theorems are correctness statements, and none states a security property.
+The AES cipher theorems are correctness statements, and none states a security property.
 `invCipher_cipher` and `ciphInv_ciph` (`Proofs/Aes/Block.lean`) prove that the inverse cipher of FIPS 197 undoes the cipher, for every key schedule and so for every key.
 `sbox_eq` proves that each entry of the S-box table equals the inverse in GF(2^8) followed by the affine map of FIPS 197 §5.1.1.
 `ciph_eq_spec` proves that AES-128 and AES-256 equal a model of FIPS 197, for every key and every block.
@@ -552,6 +552,14 @@ The three hold for every forward cipher.
 `residue_ghash` proves that GHASH of `X_1 ... X_m` is `X_1 H^m + ... + X_m H` on residues, the form that §6.4 states.
 `irreducible_modulus` (`Proofs/Aes/Field.lean`) proves that the modulus is irreducible over GF(2), so the residues form a field, and `card_adjoinRoot_modulus` that this field has `2^128` elements.
 The kernel checks a certificate of the test: 128 squarings by Algorithm 1 fix `u`, and a block inverts `u^(2^64) - u`.
+
+`prEvent_ghash_xor_eq_le` (`Proofs/Aes/Ghash.lean`) proves that GHASH is almost XOR universal for lists of the same length.
+For two distinct lists of `m` blocks and any fixed XOR offset, a uniform hash key gives that difference with probability at most `m / 2^128`.
+`prEvent_authenticationBlocks_xor_eq_le` (`Proofs/Aes/GhashGcm.lean`) gives the bound for distinct pairs of additional data and ciphertext, with GCM's padding and final length block.
+Each byte string must have fewer than `2^64` bits, and the numerator is the larger padded block count, including the length block.
+Both inputs and the XOR offset are fixed independently of the sampled key.
+A full AES-GCM forgery bound remains unproved.
+
 `gctr_inc_block` proves that GCM encrypts block `k` of the text under `J_0` incremented `k + 1` times.
 `counter_ne_preCounter` and `counter_injOn` assume the length checks of §5.2.1.1.
 Under them, the counters of the text differ from each other and from `J_0`, the counter of the tag.
